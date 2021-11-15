@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors');
 //jwt token verify
-const admin = require("firebase-admin");
+// const admin = require("firebase-admin");
 //dotenv require
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
@@ -11,12 +11,12 @@ const port = process.env.PORT || 5000
 
 //jwt token
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
 
 //middleware
 app.use(cors());
@@ -29,21 +29,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 // console.log(uri)
 //jwt token verify on server
-async function verifyToken(req, res, next){
-  if(req.headers?.authorization?.startsWith('Bearer ')){
-    const token = req.headers.authorization.split(' ')[1];
+// async function verifyToken(req, res, next){
+//   if(req.headers?.authorization?.startsWith('Bearer ')){
+//     const token = req.headers.authorization.split(' ')[1];
   
-  try{
-    const decodedUser = await admin.auth().verifyIdToken(token);
-    req.decodedEmail = decodedUser.email;
-  }
-  catch{
+//   try{
+//     const decodedUser = await admin.auth().verifyIdToken(token);
+//     req.decodedEmail = decodedUser.email;
+//   }
+//   catch{
 
-  }
+//   }
 
-  }
-  next();
-}
+//   }
+//   next();
+// }
 
 async function run() {
     try {
@@ -58,7 +58,7 @@ async function run() {
 
 
       //load appointments from api based on user 
-      app.get('/products',verifyToken, async(req, res) => {
+      app.get('/products', async(req, res) => {
         const email = req.query.email;
         //server time changed other country server site
    const query = { email: email}
@@ -114,7 +114,7 @@ async function run() {
        });
 
        //[make admin page]
-       app.put('/users/admin', verifyToken, async(req, res) => {
+       app.put('/users/admin', async(req, res) => {
          const user= req.body;
         //  console.log('decodedEmail', req.decodedEmail);
          const requester = req.decodedEmail;
